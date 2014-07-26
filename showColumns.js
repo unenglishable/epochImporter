@@ -2,10 +2,12 @@ var lolipop = require('../lolipop/lolipop');
 var config = require('./config.json');
 lp = lolipop(config);
 
-lp.showColumns(null, 'smf_boards', function (err, columns) {
+lp.getColumns(null, process.argv[2], function (err, columns) {
   if (err) {
     console.log(err);
   }
-  console.log(columns);
+  columns.forEach(function (column) {
+    console.log(column.Field);
+  });
 });
 lp.end();
