@@ -1,7 +1,9 @@
 var lolipop = require('../lolipop/lolipop');
+var config = require('./config.json');
+var lp = lolipop(config);
 
-lolipop.showTables(null, function (err, tables) {
+lp.showTables(null, function (err, tables) {
   if (err) throw err;
   console.log(tables);
 });
-lolipop.end();
+lp.end();

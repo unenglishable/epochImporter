@@ -1,7 +1,8 @@
 var lolipop = require('../lolipop/lolipop');
-//var lolipop = lolipop();
+var config = require('./config.json');
+var lp = lolipop(config);
 
-rowStream = lolipop.streamRows(null, 'smf_members');
+rowStream = lp.streamRows(null, 'smf_members');
 rowStream.on('error', function (err) {
   console.log('Error');
 })
@@ -9,13 +10,11 @@ rowStream.on('error', function (err) {
   console.log(row);
 });
 
-columnStream = lolipop.showColumns(null, 'smf_members', function (err, columns) {
+columnStream = lp.showColumns(null, 'smf_members', function (err, columns) {
   if (err) {
     console.log(err);
   }
   console.log(columns);
 });
 
-lolipop.end(function () {
-  console.log('oh noes!');
-});
+lp.end();

@@ -1,9 +1,11 @@
 var lolipop = require('../lolipop/lolipop');
+var config = require('./config.json');
+lp = lolipop(config);
 
-lolipop.showColumns(null, 'smf_boards', function (err, columns) {
+lp.showColumns(null, 'smf_boards', function (err, columns) {
   if (err) {
     console.log(err);
   }
   console.log(columns);
 });
-lolipop.end();
+lp.end();
