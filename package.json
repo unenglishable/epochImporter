@@ -5,6 +5,7 @@
     "type": "git"
   },
   "dependencies": {
+    "level": "^0.18.0",
     "mysql": "^2.4.1",
     "through": "^2.3.4"
   }

@@ -1,10 +1,9 @@
 var lolipop = require('../lolipop/lolipop');
 var config = require('./config.json');
 var lp = lolipop(config);
-var table = process.argv[2];
-//var map = require(process.argv[3]); // some json file describing the map
+var table = 'smf_messages';
 var level = require('level');
-var db = level(process.argv[3], { valueEncoding : 'json' });
+var db = level(process.argv[2], { valueEncoding : 'json' });
 var dbWriteStream = db.createWriteStream();
 
 var through = require('through');
@@ -15,7 +14,7 @@ var tr = through(write);
 // to tell how fields need to be mapped
 function write(row) {
   this.queue({
-    key : parseInt(row.ID_BOARD),
+    key : row.ID_BOARD+'!'+row.ID_TOPIC+'!'+row.ID_MSG,
     value: row
   });
 }
