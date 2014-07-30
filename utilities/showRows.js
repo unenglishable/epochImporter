@@ -1,5 +1,5 @@
-var lolipop = require('../lolipop/lolipop');
-var config = require('./config.json');
+var lolipop = require('../../lolipop/lolipop');
+var config = require('../config.json');
 var lp = lolipop(config);
 
 rowStream = lp.createRowStream(null, process.argv[2]);

@@ -1,5 +1,5 @@
-var lolipop = require('../lolipop/lolipop');
-var config = require('./config.json');
+var lolipop = require('../../lolipop/lolipop');
+var config = require('../config.json');
 lp = lolipop(config);
 
 lp.getColumns(null, process.argv[2], function (err, columns) {

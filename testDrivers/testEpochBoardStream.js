@@ -1,6 +1,6 @@
 var through = require('through');
-var epochBoardStream = require('./epochBoardStream');
-var lpConfig = require('./config.json');
+var epochBoardStream = require('../epochBoardStream');
+var lpConfig = require('../config.json');
 
 var ebs = epochBoardStream(lpConfig);
 var boardStream = ebs.createBoardStream();

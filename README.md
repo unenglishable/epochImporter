@@ -36,25 +36,25 @@ Show tables
 -----------
 
 ~~~~
-node showTables
+node utilities/showTables
 ~~~~
 OR
 ~~~~
-node showTables dbname
+node utilities/showTables dbname
 ~~~~
 
 Show columns
 ------------
 
 ~~~~
-node showColumns tablename
+node utilities/showColumns tablename
 ~~~~
 
 Show rows
 ---------
 
 ~~~~
-node showRows tablename
+node utilities/showRows tablename
 ~~~~
 
 
@@ -72,6 +72,6 @@ board, and Posts from each thread by setting appropriate fields by newId via
 callback function of the importer method used.
 
 To test these implementations, drivers have been created:
-[testEpochBoardStream](./testEpochBoardStream.js),
-[testEpochThreadStream](./testEpochThreadStream.js),
-and [testEpochPostStream](./testEpochPostStream.js).
+[testEpochBoardStream](./testDrivers/testEpochBoardStream.js),
+[testEpochThreadStream](./testDrivers/testEpochThreadStream.js),
+and [testEpochPostStream](./testDrivers/testEpochPostStream.js).

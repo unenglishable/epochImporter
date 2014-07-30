@@ -1,5 +1,5 @@
-var lolipop = require('../lolipop/lolipop');
-var config = require('./config.json');
+var lolipop = require('../../lolipop/lolipop');
+var config = require('../config.json');
 var lp = lolipop(config);
 
 lp.getTables(null, function (err, tables) {
