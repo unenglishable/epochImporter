@@ -61,13 +61,17 @@ node showRows tablename
 Stream rows to level
 --------------------
 
-~~(Standard procedure not set yet)~~
+This cannot be done generically.  Table-streaming implementation examples are
+available in files:  [epochPostStream](./epochPostStream.js),
+[epochThreadStream](./epochThreadStream.js), and
+[epochBoardStream](./epochBoardStream.js). 
 
-(No standard procedure available)
+These implementations are combined in [epochImporter](./epochImporter.js), where
+a waterfall/hierarchical approach is taken to stream Boards, Threads from each
+board, and Posts from each thread by setting appropriate fields by newId via
+callback function of the importer method used.
 
-~~See [epochBoardMap](./epochBoardMap.js), [epochPostMap](./epochPostMap.js), or
-[epochTopicMap](./epochTopicMap.js).~~
-
-See generic example [mappedImport](./mappedImport.js).
-
-(Actually, this is not a very good example...)
+To test these implementations, drivers have been created:
+[testEpochBoardStream](./testEpochBoardStream),
+[testEpochThreadStream](./testEpochThreadStream),
+and [testEpochPostStream](./testEpochPostStream.js).
