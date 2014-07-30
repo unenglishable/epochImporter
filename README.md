@@ -72,6 +72,6 @@ board, and Posts from each thread by setting appropriate fields by newId via
 callback function of the importer method used.
 
 To test these implementations, drivers have been created:
-[testEpochBoardStream](./testEpochBoardStream),
-[testEpochThreadStream](./testEpochThreadStream),
+[testEpochBoardStream](./testEpochBoardStream.js),
+[testEpochThreadStream](./testEpochThreadStream.js),
 and [testEpochPostStream](./testEpochPostStream.js).
