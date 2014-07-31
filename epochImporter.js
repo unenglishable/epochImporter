@@ -4,9 +4,11 @@ var epochThreadStream = require('./epochThreadStream');
 var epochPostStream = require('./epochPostStream');
 var boards = require('../core/boards.js');
 var posts = require('../core/posts.js');
+var lolipop = require('../lolipop/lolipop');
 var lpConfig = require('./config.json');
+var lp = lolipop(lpConfig);
 
-var ebs = epochBoardStream(lpConfig);
+var ebs = epochBoardStream(lp);
 var boardStream = ebs.createBoardStream(null);
 
 var boardStreamThrough = through(function (boardObject) {
@@ -14,7 +16,7 @@ var boardStreamThrough = through(function (boardObject) {
 
   // import to core and use callback to create a new thread stream
   boards.import(boardObject, function (newBoardId) {
-    var ets = epochThreadStream(lpConfig);
+    var ets = epochThreadStream(lp);
     var threadStream = ets.createThreadStream(null, oldBoardId, newBoardId);
 
     var threadStreamThrough = through(function (threadObject) {
@@ -22,7 +24,7 @@ var boardStreamThrough = through(function (boardObject) {
 
       // import to core and use callback to create a new post stream
       posts.import(threadObject, function (newThreadId) {
-        var eps = epochPostStream(lpConfig);
+        var eps = epochPostStream(lp);
         var postStream = eps.createPostStream(null, oldThreadId, newThreadId);
 
         var postStreamThrough = through(function (postObject) {
