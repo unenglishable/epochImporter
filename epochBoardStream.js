@@ -17,7 +17,7 @@ EpochBoardStream.prototype.createBoardStream = function (err) {
   }
 
   var smfMap = {
-    ID_BOARD : 'id'
+    ID_BOARD : 'board_id'
   }
 
   var rowStream = this.lp.createRowStream(null, table);
