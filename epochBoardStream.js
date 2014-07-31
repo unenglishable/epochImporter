@@ -1,12 +1,11 @@
-var lolipop = require('../lolipop/lolipop');
 var epochMap = require('./epochMap.js');
 var through = require('through');
 
-var EpochBoardStream = module.exports = function EpochBoardStream(lpConfig) {
+var EpochBoardStream = module.exports = function EpochBoardStream(lp) {
   if (!(this instanceof EpochBoardStream)) {
-    return new EpochBoardStream(lpConfig);
+    return new EpochBoardStream(lp);
   }
-  this.lp = lolipop(lpConfig);
+  this.lp = lp;
 }
 
 EpochBoardStream.prototype.createBoardStream = function (err) {
@@ -29,7 +28,7 @@ EpochBoardStream.prototype.createBoardStream = function (err) {
   });
   boardStream = rowStream.pipe(tr);
 
-  this.lp.end();
+  //this.lp.end();
 
   return boardStream;
 }

@@ -1,12 +1,11 @@
-var lolipop = require('../lolipop/lolipop');
 var epochMap = require('./epochMap.js');
 var through = require('through');
 
-var EpochPostStream = module.exports = function EpochPostStream(lpConfig) {
+var EpochPostStream = module.exports = function EpochPostStream(lp) {
   if (!(this instanceof EpochPostStream)) {
-    return new EpochPostStream(lpConfig);
+    return new EpochPostStream(lp);
   }
-  this.lp = lolipop(lpConfig);
+  this.lp = lp;
 }
 
 EpochPostStream.prototype.createPostStream = function (err, oldThreadId, newThreadId) {
@@ -32,7 +31,7 @@ EpochPostStream.prototype.createPostStream = function (err, oldThreadId, newThre
   });
   postStream = rowStreamWhere.pipe(tr);
 
-  this.lp.end();
+  //this.lp.end();
 
   return postStream;
 }
