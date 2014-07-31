@@ -2,5 +2,6 @@
 "host" : "localhost",
 "database" : "btctalk",
 "user" : "btc",
-"password": "Yy&m*6@d^!!ch"
+"password": "Yy&m*6@d^!!ch",
+"connectionLimit": 5
 }
