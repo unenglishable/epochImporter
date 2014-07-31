@@ -12,25 +12,25 @@ var ebs = epochBoardStream(lp);
 var boardStream = ebs.createBoardStream(null);
 
 var boardStreamThrough = through(function (boardObject) {
-  oldBoardId = boardObject.smf.board_id;
-
   // import to core and use callback to create a new thread stream
   boards.import(boardObject, function (err, newBoard) {
     if (err) {
       error(err);
     }
+    var oldBoardId = newBoard.smf.board_id;
+    console.log('boardId: '+oldBoardId);
     var newBoardId = newBoard.id;
     var ets = epochThreadStream(lp);
     var threadStream = ets.createThreadStream(null, oldBoardId, newBoardId);
 
     var threadStreamThrough = through(function (threadObject) {
-      oldThreadId = threadObject.smf.thread_id;
-
       // import to core and use callback to create a new post stream
       posts.import(threadObject, function (err, newThread) {
         if (err) {
           error(err);
         }
+        var oldThreadId = newThread.smf.thread_id;
+        console.log('threadId: '+oldThreadId);
         var newThreadId = newThread.thread_id;
         var eps = epochPostStream(lp);
         var postStream = eps.createPostStream(null, oldThreadId, newThreadId);
@@ -45,8 +45,6 @@ var boardStreamThrough = through(function (boardObject) {
         });
         postStream.pipe(postStreamThrough);
       });
-      console.log('test: ');
-      console.log(threadObject);
     });
     threadStream.pipe(threadStreamThrough);
   });
