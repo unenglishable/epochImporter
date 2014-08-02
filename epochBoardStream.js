@@ -1,5 +1,5 @@
 var epochMap = require('./epochMap.js');
-var through = require('through2');
+var through2 = require('through2');
 
 var EpochBoardStream = module.exports = function EpochBoardStream(lp) {
   if (!(this instanceof EpochBoardStream)) {
@@ -20,7 +20,7 @@ EpochBoardStream.prototype.createBoardStream = function (err) {
   }
 
   var rowStream = this.lp.createRowStream(null, table);
-  var tr = through.obj(function (row, enc, cb) {
+  var tr = through2.obj(function (row, enc, cb) {
     var obj = epochMap.remapObject(row, tableMap);
     var smfObject = epochMap.remapObject(row, smfMap);
     obj['smf'] = smfObject;
