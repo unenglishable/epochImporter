@@ -7,11 +7,10 @@ var lp = lolipop(lpConfig);
 var ebs = epochBoardStream(lp);
 var boardStream = ebs.createBoardStream();
 
-var tr = through({ objectMode : true}, function (data, enc, cb) {
+var tr = through.obj(function (data, enc, cb) {
   console.log('test: ');
   console.log(data);
-  this.push(data);
-  cb();
+  return cb();
 },
 function() {
   lp.end();

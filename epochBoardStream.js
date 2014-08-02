@@ -20,12 +20,12 @@ EpochBoardStream.prototype.createBoardStream = function (err) {
   }
 
   var rowStream = this.lp.createRowStream(null, table);
-  var tr = through({ objectMode : true }, function (row, enc, cb) {
+  var tr = through.obj(function (row, enc, cb) {
     var obj = epochMap.remapObject(row, tableMap);
     var smfObject = epochMap.remapObject(row, smfMap);
     obj['smf'] = smfObject;
     this.push(obj);
-    cb();
+    return cb();
   });
   boardStream = rowStream.pipe(tr);
 
