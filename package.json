@@ -7,6 +7,6 @@
   "dependencies": {
     "level": "^0.18.0",
     "mysql": "^2.4.1",
-    "through": "^2.3.4"
+    "through2": "^0.5.1"
   }
 }
