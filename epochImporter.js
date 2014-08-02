@@ -1,4 +1,4 @@
-var through = require('through');
+var through2 = require('through2');
 var epochBoardStream = require('./epochBoardStream');
 var epochThreadStream = require('./epochThreadStream');
 var epochPostStream = require('./epochPostStream');
@@ -8,46 +8,71 @@ var lolipop = require('../lolipop/lolipop');
 var lpConfig = require('./config.json');
 var lp = lolipop(lpConfig);
 
-var ebs = epochBoardStream(lp);
-var boardStream = ebs.createBoardStream(null);
+var async = require('async');
+var concurrency = Number.MAX_VALUE; // Concurrency handled by lolipop
 
-var boardStreamThrough = through(function (boardObject) {
-  // import to core and use callback to create a new thread stream
-  boards.import(boardObject, function (err, newBoard) {
-    if (err) {
-      error(err);
-    }
-    var oldBoardId = newBoard.smf.board_id;
-    console.log('boardId: '+oldBoardId);
-    var newBoardId = newBoard.id;
-    var ets = epochThreadStream(lp);
-    var threadStream = ets.createThreadStream(null, oldBoardId, newBoardId);
+var asyncQueue = async.queue(function (runTask, callback) {
+  runTask(callback);
+}, concurrency);
 
-    var threadStreamThrough = through(function (threadObject) {
-      // import to core and use callback to create a new post stream
-      posts.import(threadObject, function (err, newThread) {
-        if (err) {
-          error(err);
-        }
-        var oldThreadId = newThread.smf.thread_id;
-        console.log('threadId: '+oldThreadId);
-        var newThreadId = newThread.thread_id;
-        var eps = epochPostStream(lp);
-        var postStream = eps.createPostStream(null, oldThreadId, newThreadId);
+asyncQueue.drain = function () {
+  lp.end(function () {
+    console.log('Import complete.');
+  });
+}
 
-        var postStreamThrough = through(function (postObject) {
-          posts.import(postObject, function (err, newPost) {
+asyncQueue.push(function (asyncBoardCb) {
+
+  var ebs = epochBoardStream(lp);
+  var boardStream = ebs.createBoardStream(null);
+
+  boardStream.pipe(through2.obj(function (boardObject, enc, trBoardCb) {
+    boards.import(boardObject, function (err, newBoard) {
+      if (err) {
+        error(err);
+      }
+
+      trBoardCb();  // Don't return.  Async will handle end.
+
+      asyncQueue.push(function (asyncThreadCb) {
+
+        var oldBoardId = newBoard.smf.board_id;
+        console.log('boardId: '+oldBoardId);
+        var newBoardId = newBoard.id;
+        var ets = epochThreadStream(lp);
+        var threadStream = ets.createThreadStream(null, oldBoardId, newBoardId);
+
+        threadStream.pipe(through2.obj(function (threadObject, enc, trThreadCb) {
+          posts.import(threadObject, function (err, newThread) {
             if (err) {
               error(err);
             }
-            console.log('postId: '+newPost.smf.post_id);
+
+            trThreadCb();  // Don't return.  Async will handle end.
+
+            asyncQueue.push(function (asyncPostCb) {
+
+              var oldThreadId = newThread.smf.thread_id;
+              console.log('threadId: '+oldThreadId);
+              var newThreadId = newThread.thread_id;
+              var eps = epochPostStream(lp);
+              var postStream = eps.createPostStream(null, oldThreadId, newThreadId);
+
+              postStream.pipe(through2.obj(function (postObject, enc, trPostCb) {
+                posts.import(postObject, function (err, newPost) {
+                  if (err) {
+                    error(err);
+                  }
+
+                  trPostCb();  // Don't return.  Async will handle end.
+
+                  console.log('postId: '+newPost.smf.post_id);
+                });
+              }, asyncPostCb));  // When stream is empty, worker is done
+            });
           });
-        });
-        postStream.pipe(postStreamThrough);
+        }, asyncThreadCb));  // When stream is empty, worker is done
       });
     });
-    threadStream.pipe(threadStreamThrough);
-  });
+  }, asyncBoardCb));  // When stream is empty, worker is done
 });
-
-boardStream.pipe(boardStreamThrough);

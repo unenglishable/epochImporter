@@ -1,5 +1,5 @@
 var epochMap = require('./epochMap.js');
-var through = require('through');
+var through2 = require('through2');
 
 var EpochThreadStream = module.exports = function EpochThreadStream(lp) {
   if (!(this instanceof EpochThreadStream)) {
@@ -17,15 +17,14 @@ EpochThreadStream.prototype.createThreadStream = function (err, oldBoardId, newB
   }
 
   var rowStreamWhere = this.lp.createRowStreamWhere(null, table, { ID_BOARD : oldBoardId});
-  var tr = through(function (row) {
+  var tr = through2.obj(function (row, enc, cb) {
     var obj = { board_id : newBoardId };
     var smfObject = epochMap.remapObject(row, smfMap);
     obj['smf'] = smfObject;
-    this.queue(obj);
+    this.push(obj);
+    return cb();
   });
   threadStream = rowStreamWhere.pipe(tr);
-
-  //this.lp.end();
 
   return threadStream;
 }
